@@ -202,9 +202,6 @@ function bar() {
 }
 
 var baz = function() {
-  return 'bye
+  return 'bye'
 }
 ```
-
-### 8. What is an IIFE?
-
