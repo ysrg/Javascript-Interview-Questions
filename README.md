@@ -180,7 +180,7 @@ This happens because in javascript the scope is defined lexically, meaning that 
 
 ### 7. What is variable hoisting?
 
-All variable declaration are hoisted (pushed) at the top of the file/function scope.
+All variable declarations are hoisted (pushed) at the top of the file/function scope.
 
 ```javascript
 console.log(foo); // undefined
@@ -194,7 +194,7 @@ var foo;
 console.log(foo) //undefined
 foo=1
 
-bar() //hi - Function declaration are hoisted
+bar() //hi - Function declarations are hoisted
 baz() //TypeError: baz is not a function. It was hoisted as `var baz`
 
 function bar() {
