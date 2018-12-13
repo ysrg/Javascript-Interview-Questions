@@ -209,3 +209,39 @@ var baz = function() {
   return 'bye'
 }
 ```
+
+### 8. What is the scope chain?
+
+The thing about function scopes is that they can nest inside other function scopes and when a function needs a variable reference it looks up in its scope and if it doesn't find it -- it continues to look in the outer scopes in a chain-like order, until it reaches the global scope. The scope chain is defined by the way how the program is written (lexically) in the file and not by the how the functions are invoked.
+
+```js
+function foo() {
+  console.log(bar)
+}
+
+function baz() {
+  var bar = 1;
+  foo()
+}
+
+baz()
+```
+
+To make this work, we can make use of the scope chain --
+
+```js
+function foo() {
+  console.log(bar)
+}
+//var bar = 1
+function baz() {
+  var bar = 1;
+  function foo() {
+    // we could just as well access the `bar` var in the global scope
+    console.log(bar) //we have access to bar now in the outer scope
+  }
+  foo()
+}
+
+baz()
+```
