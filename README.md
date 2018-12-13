@@ -1,5 +1,9 @@
 # Javascript Interview Questions
 
+## Useful links
+
+* [Algorithms in JS](https://medium.com/siliconwat/algorithms-in-javascript-b0bed68f4038)
+
 ### 1. What does `use strict;` do in JS?
 
 Strict mode allows us to place a program or a function in what's called a strict operating context. In a nutshell -- this makes debugging easier, code error that would otherwise have been ignored or would have failed silently, will now generate errors or throw exceptions. This is extremely helpful as it alerts soon enough that there is a problem in your code and directs you quickly to the probable source.
