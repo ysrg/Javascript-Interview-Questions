@@ -245,3 +245,116 @@ function baz() {
 
 baz()
 ```
+
+
+### 8. What is the scope chain?
+
+The thing about function scopes is that they can nest inside other function scopes and when a function needs a variable reference it looks up in its scope and if it doesn't find it -- it continues to look in the outer scopes in a chain-like order, until it reaches the global scope. The scope chain is defined by the way how the program is written (lexically) in the file and not by the how the functions are invoked.
+
+```js
+function foo() {
+  console.log(bar)
+}
+
+function baz() {
+  var bar = 1;
+  foo()
+}
+
+baz()
+```
+
+To make this work, we can make use of the scope chain --
+
+```js
+function foo() {
+  console.log(bar)
+}
+//var bar = 1
+function baz() {
+  var bar = 1;
+  function foo() {
+    // we could just as well access the `bar` var in the global scope
+    console.log(bar) //we have access to bar now in the outer scope
+  }
+  foo()
+}
+
+baz()
+```
+
+### 9. IIFE
+
+A rule you should stick to when programming in general, is to avoid global variables. That way you avoid collisions and other hard to debug bugs, and at the same time it makes your application more predictable. Let's say you you have multiple `script` - `main.js` and `other.js` files that you import in your `index.html`.
+
+```js
+//main.js
+var foo = {'hello': 'main.js'}
+
+//other.js
+var foo = {'bye': 'other.js'}
+```
+
+Open `index.html` in your browser and open the console. If you type `foo`, you can see it's global variable, and depending on your scripts order in `index.html` you'll see its value (`{'hello': 'main.js'}` in this case, as `main.js` was loaded first). This is a serious red flag. This is where we can make use of IIFES -- just wrap your code in each file in an iife:
+
+```js
+//main.js
+(function() {
+  var foo = {'hello': 'main.js'}
+})()
+
+//other.js
+(function() {
+  var foo = {'bye': 'other.js'}
+})()
+```
+
+This is also known as module pattern. You wrap the variables in its corresponding function scopes, thus avoiding any global collisions.
+
+### 10. Closures
+
+A closure is defined as the ability of a function to access its surrounding scopes variables when it is returned from another function. The garbage collector doesn't destroy the variables that are still referenced from inner scopes (are in closure). An inner function can still keep a reference for outer scope variables (close over) even if the outer function already returned.
+
+```js
+function sayHi(name) {
+  var text = 'Hi ' + name;
+  return function() {
+    console.log(text)
+  }
+}
+
+var greet = sayHi('Marry') //greet is the inner function now
+greet() //Hi Marry
+```
+
+#### Closure in loops
+
+```js
+var foo = [];
+for (var i = 0; i<10; i++) {
+  foo[i] = function() {return i}
+}
+console.log(foo[0]()) //10
+console.log(foo[1]()) //10
+console.log(foo[2]()) //10
+```
+
+The reason why this happens is that the function inside the loop refers the outer (global in this case) `i`. It doesn't receive each iteration the current `i` (a new copy of `i`) but rather when the loop exits, the `i` inside the function is assigned `10`.
+To solve this we can:
+
+* Use ES6 block scoping variables like `let` when declaring `i`
+
+* Use an IIFE:
+
+```js
+var foo = [];
+for (var i = 0; i<10; i++) {
+  (function(y){
+    foo[i] = function() {return y} // y is the passed in outer i
+    //now the function receives new copy of i on each iteration
+  })(i)
+}
+console.log(foo[0]()) //0
+console.log(foo[1]()) //1
+console.log(foo[2]()) //2
+```
